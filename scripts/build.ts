@@ -8,7 +8,7 @@ const main = async () => {
     shell("yarn tsc -p tsconfig.cjs.json"),
     shell("yarn tsc -p tsconfig.esm.json"),
   ]);
-  await shell("cherry-pick --cwd ./lib --input-dir ../src --types-dir ./$types --cjs-dir ./$cjs --esm-dir ./$esm");
+  await shell("cherry-pick --cwd ./lib --input-dir ../src --types-dir ./\\$types --cjs-dir ./\\$cjs --esm-dir ./\\$esm");
   await copyPackageSet();
 };
 
