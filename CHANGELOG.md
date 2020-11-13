@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.0.1"></a>
+## 0.0.1 (2020-11-13)
+
+**Note:** Version bump only for package @himenon/github-storage-js
+
+
+
+
+
 <a name="0.0.4"></a>
 ## 0.0.4 (2020-11-11)
 
