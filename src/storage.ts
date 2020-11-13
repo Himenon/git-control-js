@@ -1,6 +1,6 @@
-import * as fs from "fs";
 import * as Git from "./git";
 import * as logger from "./logger";
+import * as rimraf from "rimraf";
 
 /**
  * Storageして利用するリポジトリの情報
@@ -70,7 +70,7 @@ export const create = ({ git, repoConfig, protocol, workingDir }: Params): Stora
     commit: (message = "chore: update data") => git.commit(message),
     push: (branch = "origin") => git.push(branch, repoConfig.branch),
     clear: () => {
-      fs.unlinkSync(workingDir);
+      rimraf.sync(workingDir);
       logger.log(`Delete: ${workingDir}`);
     },
   };
