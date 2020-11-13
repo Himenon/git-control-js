@@ -1,6 +1,12 @@
-# @himenon/node-lib-template
+# @himenon/github-storage-js
 
-## Usage
+## Install
+
+```
+yarn add @himenon/github-storage-js
+```
+
+## Development
 
 | scripts                   | description                                 |
 | :------------------------ | :------------------------------------------ |
@@ -26,4 +32,4 @@
 
 ## LICENCE
 
-[@himenon-node-lib-template](https://github.com/Himenon/node-lib-template)・MIT
+[@himenon-github-storage-js](https://github.com/Himenon/github-storage-js)・MIT
