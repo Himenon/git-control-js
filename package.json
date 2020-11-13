@@ -1,20 +1,20 @@
 {
-  "name": "@himenon/node-lib-template",
-  "version": "0.0.4",
+  "name": "@himenon/github-storage-js",
+  "version": "0.0.0",
   "private": true,
-  "description": "node library template",
+  "description": "GitHub Storage JS",
   "keywords": [
-    "template",
+    "nodejs",
     "proxy directory",
     "typescript"
   ],
-  "homepage": "https://github.com/Himenon/node-lib-template#readme",
+  "homepage": "https://github.com/Himenon/github-storage-js#readme",
   "bugs": {
-    "url": "https://github.com/Himenon/node-lib-template/issues"
+    "url": "https://github.com/Himenon/github-storage-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Himenon/node-lib-template.git"
+    "url": "git@github.com:Himenon/github-storage-js.git"
   },
   "license": "MIT",
   "author": {
@@ -41,7 +41,7 @@
     "lerna:version:up": "lerna version --yes",
     "release:github:registry": "yarn publish --registry https://npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}",
     "release:npm:registry": "yarn publish",
-    "test": "run-s test:depcruise test:jest",
+    "test": "run-s test:depcruise",
     "test:depcruise": "depcruise --validate .dependency-cruiser.js src",
     "test:jest": "jest -c ./jest.config.js",
     "ts": "ts-node -P tsconfig.build.json"
@@ -61,6 +61,9 @@
     "kind-of": "6.0.3",
     "node-fetch": "2.6.1"
   },
+  "dependencies": {
+    "execa": "4.1.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
@@ -76,7 +79,6 @@
     "eslint": "7.13.0",
     "eslint-config-prettier": "6.14.0",
     "eslint-plugin-import": "2.22.1",
-    "execa": "4.1.0",
     "generate-changelog": "1.8.0",
     "husky": "4.3.0",
     "jest": "26.6.3",
