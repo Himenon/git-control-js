@@ -9,16 +9,16 @@ export interface Type {
    * 現在のローカルブランチ名を取得する
    * @example "master"
    */
-  getBranch: (cwd: string) => Shell.Type;
+  getBranch: () => Shell.Type;
   /**
    * 最新のコミットの日付取得する
    * @example "Mon Oct 28 20:18:16 2019 +0900"
    */
-  getLatestCommitDate: (cwd: string) => Shell.Type;
+  getLatestCommitDate: () => Shell.Type;
   /**
    * Head CommitのShaを取得する
    */
-  getHeadCommitSha: (cwd: string) => Shell.Type;
+  getHeadCommitSha: () => Shell.Type;
   /**
    * `git clone`
    *
