@@ -1,20 +1,20 @@
 {
-  "name": "@himenon/github-storage-js",
-  "version": "0.0.4",
+  "name": "@himenon/git-control-js",
+  "version": "0.0.0",
   "private": true,
-  "description": "GitHub Storage JS",
+  "description": "GitHub control JS",
   "keywords": [
     "nodejs",
     "proxy directory",
     "typescript"
   ],
-  "homepage": "https://github.com/Himenon/github-storage-js#readme",
+  "homepage": "https://github.com/Himenon/git-control-js#readme",
   "bugs": {
-    "url": "https://github.com/Himenon/github-storage-js/issues"
+    "url": "https://github.com/Himenon/git-control-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Himenon/github-storage-js.git"
+    "url": "git@github.com:Himenon/git-control-js.git"
   },
   "license": "MIT",
   "author": {

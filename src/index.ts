@@ -1,2 +1,2 @@
-export * as Git from "./git";
-export * as Storage from "./storage";
+export * as Command from "./command";
+export * as IO from "./io";
