@@ -1,4 +1,5 @@
 import * as Shell from "./shell";
+import * as path from "path";
 import { existDirectory } from "./filesystem";
 
 export { Shell };
@@ -32,7 +33,7 @@ export interface Type {
     repo: string;
     branch: string;
     baseUrl: string;
-    baseSshUrl: string;
+    baseSsh: string;
     protocol: "ssh" | "https";
     outputDir: string;
   }) => Shell.Type;
@@ -61,11 +62,11 @@ export interface Type {
  * gitコマンドを生成する
  * @param pwd コマンド実行ディレクトリ
  */
-export const create = (cwd: string): Type => {
+export const create = (workingDir: string): Type => {
   /**
    * @param args `git`コマンドの引数
    */
-  const git = (args: string) => {
+  const git = (args: string, cwd = workingDir) => {
     console.log("Command: " + "git " + args);
     return Shell.exec("git " + args, cwd);
   };
@@ -73,14 +74,14 @@ export const create = (cwd: string): Type => {
     getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
     getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
     getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
-    clone: ({ owner, repo, branch, baseUrl, baseSshUrl, protocol, outputDir }) => {
+    clone: ({ owner, repo, branch, baseUrl, baseSsh, protocol, outputDir }) => {
       if (existDirectory(outputDir)) {
         throw new Error(`Already exist directory: "${outputDir}`);
       }
       if (protocol === "ssh") {
-        return git(`clone -b ${branch} ${baseSshUrl}:${owner}/${repo} ${outputDir}`);
+        return git(`clone -b ${branch} ${baseSsh}:${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
       }
-      return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`);
+      return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
     },
     getStatus: (): Shell.Type => git("status"),
     push: (remote: string, branch: string): Shell.Type => git(`push ${remote} ${branch}`),
