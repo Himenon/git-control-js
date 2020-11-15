@@ -5,18 +5,18 @@ import * as rimraf from "rimraf";
 /**
  * Storageして利用するリポジトリの情報
  */
-export interface RepositoryConfig {
-  baseUrl: string;
-  baseSshUrl: string;
+export interface RepoConfig {
+  baseUrl: "https://github.com" | string;
+  baseSsh: "git@github.com" | string;
   owner: string;
   repo: string;
   branch: string;
 }
 
 export interface Params {
-  git: Command.Type;
+  cmd: Command.Type;
   protocol: "ssh" | "https";
-  repoConfig: RepositoryConfig;
+  repoConfig: RepoConfig;
   workingDir: string;
 }
 
@@ -48,7 +48,7 @@ export interface IO {
   clear: () => void;
 }
 
-export const create = ({ git, repoConfig, protocol, workingDir }: Params): IO => {
+export const create = ({ cmd: git, repoConfig, protocol, workingDir }: Params): IO => {
   return {
     setup: async () => {
       await git.clone({
@@ -56,7 +56,7 @@ export const create = ({ git, repoConfig, protocol, workingDir }: Params): IO =>
         repo: repoConfig.repo,
         branch: repoConfig.branch,
         baseUrl: repoConfig.baseUrl,
-        baseSshUrl: repoConfig.baseSshUrl,
+        baseSsh: repoConfig.baseSsh,
         protocol: protocol,
         outputDir: workingDir,
       });
