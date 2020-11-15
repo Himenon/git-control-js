@@ -1,23 +1,23 @@
-import { shell, Type } from "./shell";
+import * as Shell from "./shell";
 import { existDirectory } from "./filesystem";
 
-export { Type };
+export { Shell };
 
-export interface Command {
+export interface Type {
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
    */
-  getBranch: (cwd: string) => Type;
+  getBranch: (cwd: string) => Shell.Type;
   /**
    * 最新のコミットの日付取得する
    * @example "Mon Oct 28 20:18:16 2019 +0900"
    */
-  getLatestCommitDate: (cwd: string) => Type;
+  getLatestCommitDate: (cwd: string) => Shell.Type;
   /**
    * Head CommitのShaを取得する
    */
-  getHeadCommitSha: (cwd: string) => Type;
+  getHeadCommitSha: (cwd: string) => Shell.Type;
   /**
    * `git clone`
    *
@@ -35,58 +35,56 @@ export interface Command {
     baseSshUrl: string;
     protocol: "ssh" | "https";
     outputDir: string;
-    cwd: string;
-  }) => Type;
+  }) => Shell.Type;
   /**
    * `git status`
    */
-  getStatus: () => Type;
+  getStatus: () => Shell.Type;
   /**
    * `git push`
    * @param remote
    * @param branch
    */
-  push: (remote: string, branch: string) => Type;
+  push: (remote: string, branch: string) => Shell.Type;
   /**
    * `git commit -m ${message} --no-verify`
    * @param message
    */
-  commit: (message: string) => Type;
+  commit: (message: string) => Shell.Type;
   /**
    * `git add -A`
    */
-  addAll: () => Type;
+  addAll: () => Shell.Type;
 }
 
 /**
  * gitコマンドを生成する
  * @param pwd コマンド実行ディレクトリ
  */
-export const createCommand = (pwd: string): Command => {
+export const create = (cwd: string): Type => {
   /**
    * @param args `git`コマンドの引数
-   * @param cwd `git`コマンド実行ディレクトリ
    */
-  const git = (args: string, cwd: string = pwd) => {
+  const git = (args: string) => {
     console.log("Command: " + "git " + args);
-    return shell("git " + args, cwd);
+    return Shell.exec("git " + args, cwd);
   };
   return {
-    getBranch: (cwd: string): Type => git("symbolic-ref --short HEAD", cwd),
-    getLatestCommitDate: (cwd: string): Type => git(`log --pretty=format:"%ad" -1`, cwd),
-    getHeadCommitSha: (cwd: string): Type => git("rev-parse HEAD", cwd),
-    clone: ({ owner, repo, branch, baseUrl, baseSshUrl, protocol, outputDir, cwd }) => {
+    getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
+    getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
+    getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
+    clone: ({ owner, repo, branch, baseUrl, baseSshUrl, protocol, outputDir }) => {
       if (existDirectory(outputDir)) {
         throw new Error(`Already exist directory: "${outputDir}`);
       }
       if (protocol === "ssh") {
-        return git(`clone -b ${branch} ${baseSshUrl}:${owner}/${repo} ${outputDir}`, cwd);
+        return git(`clone -b ${branch} ${baseSshUrl}:${owner}/${repo} ${outputDir}`);
       }
-      return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`, cwd);
+      return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`);
     },
-    getStatus: (): Type => git("status"),
-    push: (remote: string, branch: string): Type => git(`push ${remote} ${branch}`),
-    commit: (message: string): Type => git(`commit -m '${message}' --no-verify`),
+    getStatus: (): Shell.Type => git("status"),
+    push: (remote: string, branch: string): Shell.Type => git(`push ${remote} ${branch}`),
+    commit: (message: string): Shell.Type => git(`commit -m '${message}' --no-verify`),
     addAll: () => git("add -A"),
   };
 };

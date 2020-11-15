@@ -1,9 +1,9 @@
-# @himenon/github-storage-js
+# @himenon/git-control-js
 
 ## Install
 
 ```
-yarn add @himenon/github-storage-js
+yarn add @himenon/git-control-js
 ```
 
 ## Development
@@ -32,4 +32,4 @@ yarn add @himenon/github-storage-js
 
 ## LICENCE
 
-[@himenon-github-storage-js](https://github.com/Himenon/github-storage-js)・MIT
+[@himenon-git-control-js](https://github.com/Himenon/git-control-js)・MIT

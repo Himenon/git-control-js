@@ -1,4 +1,4 @@
-import * as Git from "./git";
+import * as Command from "./command";
 import * as logger from "./logger";
 import * as rimraf from "rimraf";
 
@@ -14,13 +14,13 @@ export interface RepositoryConfig {
 }
 
 export interface Params {
-  git: Git.Command;
+  git: Command.Type;
   protocol: "ssh" | "https";
   repoConfig: RepositoryConfig;
   workingDir: string;
 }
 
-export interface Storage {
+export interface IO {
   /**
    * Set up the target Git repository in your local directory.
    */
@@ -33,22 +33,22 @@ export interface Storage {
    * Add the local changes to the stage.
    * (git add -A)
    */
-  save: () => Git.Type;
+  save: () => Command.Shell.Type;
   /**
    * Git commit.
    */
-  commit: (message: string) => Git.Type;
+  commit: (message: string) => Command.Shell.Type;
   /**
    * Git push.
    */
-  push: (branch?: string) => Git.Type;
+  push: (branch?: string) => Command.Shell.Type;
   /**
    * Clear the working directory.
    */
   clear: () => void;
 }
 
-export const create = ({ git, repoConfig, protocol, workingDir }: Params): Storage => {
+export const create = ({ git, repoConfig, protocol, workingDir }: Params): IO => {
   return {
     setup: async () => {
       await git.clone({
@@ -59,7 +59,6 @@ export const create = ({ git, repoConfig, protocol, workingDir }: Params): Stora
         baseSshUrl: repoConfig.baseSshUrl,
         protocol: protocol,
         outputDir: workingDir,
-        cwd: process.cwd(),
       });
     },
     isClean: async () => {
