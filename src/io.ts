@@ -26,6 +26,10 @@ export interface IO {
    */
   setup: () => Promise<void>;
   /**
+   * Set up username and email.
+   */
+  setConfig: (key: string, value: string, type: "local" | "global" | "system") => Command.Shell.Type;
+  /**
    * Make sure your git directory is clean.
    */
   isClean: () => Promise<boolean>;
@@ -61,6 +65,7 @@ export const create = ({ cmd: git, config, protocol, workingDir }: Params): IO =
         outputDir: workingDir,
       });
     },
+    setConfig: git.setConfig,
     isClean: async () => {
       const { stdout } = await git.getStatus();
       return !!stdout.match(/nothing to commit, working tree clean/);

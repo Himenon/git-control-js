@@ -28,7 +28,7 @@ yarn add @himenon/git-control-js
 
 ## Release
 
-- Automatic version updates are performed when merged into the `default` branch.
+- Automatic version updates are performed when merged into the `main` branch.
 
 ## LICENCE
 
