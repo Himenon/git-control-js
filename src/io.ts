@@ -5,7 +5,7 @@ import * as rimraf from "rimraf";
 /**
  * Storageして利用するリポジトリの情報
  */
-export interface RepoConfig {
+export interface Config {
   baseUrl: "https://github.com" | string;
   baseSsh: "git@github.com" | string;
   owner: string;
@@ -16,7 +16,7 @@ export interface RepoConfig {
 export interface Params {
   cmd: Command.Type;
   protocol: "ssh" | "https";
-  repoConfig: RepoConfig;
+  config: Config;
   workingDir: string;
 }
 
@@ -48,15 +48,15 @@ export interface IO {
   clear: () => void;
 }
 
-export const create = ({ cmd: git, repoConfig, protocol, workingDir }: Params): IO => {
+export const create = ({ cmd: git, config, protocol, workingDir }: Params): IO => {
   return {
     setup: async () => {
       await git.clone({
-        owner: repoConfig.owner,
-        repo: repoConfig.repo,
-        branch: repoConfig.branch,
-        baseUrl: repoConfig.baseUrl,
-        baseSsh: repoConfig.baseSsh,
+        owner: config.owner,
+        repo: config.repo,
+        branch: config.branch,
+        baseUrl: config.baseUrl,
+        baseSsh: config.baseSsh,
         protocol: protocol,
         outputDir: workingDir,
       });
@@ -67,7 +67,7 @@ export const create = ({ cmd: git, repoConfig, protocol, workingDir }: Params): 
     },
     save: () => git.addAll(),
     commit: (message = "chore: update data") => git.commit(message),
-    push: (branch = "origin") => git.push(branch, repoConfig.branch),
+    push: (branch = "origin") => git.push(branch, config.branch),
     clear: () => {
       rimraf.sync(workingDir);
       logger.log(`Delete: ${workingDir}`);
