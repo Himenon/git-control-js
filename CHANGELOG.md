@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# 0.3.0 (2020-11-16)
+
+
+### Features
+
+* add set config ([#9](https://github.com/Himenon/git-control-js/issues/9)) ([480c3ca](https://github.com/Himenon/git-control-js/commit/480c3ca))
+
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2020-11-16)
 
