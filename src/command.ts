@@ -1,3 +1,4 @@
+import { EOL } from "os";
 import * as Shell from "./shell";
 import * as path from "path";
 import { existDirectory } from "./filesystem";
@@ -5,6 +6,7 @@ import { existDirectory } from "./filesystem";
 export { Shell };
 
 export interface Type {
+  setConfig: (key: string, value: string, type: "local" | "global" | "system") => Shell.Type;
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
@@ -67,10 +69,13 @@ export const create = (workingDir: string): Type => {
    * @param args `git`コマンドの引数
    */
   const git = (args: string, cwd = workingDir) => {
-    console.log("Command: " + "git " + args);
+    process.stdout.write("Command: " + "git " + args + EOL);
     return Shell.exec("git " + args, cwd);
   };
   return {
+    setConfig: (key, value, type) => {
+      return git(`config --${type} ${key} ${value}`);
+    },
     getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
     getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
     getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
