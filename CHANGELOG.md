@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.4.0"></a>
+# 0.4.0 (2020-11-17)
+
+
+### Features
+
+* update interface ([#10](https://github.com/Himenon/git-control-js/issues/10)) ([dcda3f1](https://github.com/Himenon/git-control-js/commit/dcda3f1))
+
+
+
+
+
 <a name="0.3.0"></a>
 # 0.3.0 (2020-11-16)
 
