@@ -5,8 +5,19 @@ import { existDirectory } from "./filesystem";
 
 export { Shell };
 
+export interface CloneParams {
+  owner: string;
+  repo: string;
+  branch: string;
+  baseUrl: "https://github.com" | string;
+  baseSsh: "git@github.com" | string;
+  protocol: "ssh" | "https";
+  outputDir: string;
+  authToken?: string;
+}
+
 export interface Type {
-  setConfig: (key: string, value: string, type: "local" | "global" | "system") => Shell.Type;
+  setConfig: (key: string, value: string, type?: "local" | "global" | "system") => Shell.Type;
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
@@ -30,15 +41,7 @@ export interface Type {
    * @param branch ブランチ名
    * @param baseUrl GitHub EnterPriseなどのBaseUrl
    */
-  clone: (params: {
-    owner: string;
-    repo: string;
-    branch: string;
-    baseUrl: string;
-    baseSsh: string;
-    protocol: "ssh" | "https";
-    outputDir: string;
-  }) => Shell.Type;
+  clone: (params: CloneParams) => Shell.Type;
   /**
    * `git status`
    */
@@ -73,18 +76,24 @@ export const create = (workingDir: string): Type => {
     return Shell.exec("git " + args, cwd);
   };
   return {
-    setConfig: (key, value, type) => {
+    setConfig: (key, value, type = "local") => {
       return git(`config --${type} ${key} ${value}`);
     },
     getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
     getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
     getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
-    clone: ({ owner, repo, branch, baseUrl, baseSsh, protocol, outputDir }) => {
+    clone: ({ owner, repo, branch, baseUrl, baseSsh, protocol, outputDir, authToken }) => {
       if (existDirectory(outputDir)) {
         throw new Error(`Already exist directory: "${outputDir}`);
       }
       if (protocol === "ssh") {
         return git(`clone -b ${branch} ${baseSsh}:${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
+      }
+      if (authToken) {
+        return git(
+          `clone -b ${branch} https://x-access-token:${authToken}@github.com/${owner}/${repo}.git ${outputDir}`,
+          path.dirname(outputDir),
+        );
       }
       return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
     },
