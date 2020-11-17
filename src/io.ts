@@ -2,7 +2,7 @@ import * as Command from "./command";
 import * as logger from "./logger";
 import * as rimraf from "rimraf";
 
-export interface Params extends Omit<Command.CloneParams, "authToken"> {
+export interface Params extends Omit<Command.CloneParams, "authToken" | "outputDir"> {
   cmd: Command.Type;
   authToken?: string;
   workingDir: string;
