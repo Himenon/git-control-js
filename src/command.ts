@@ -19,7 +19,7 @@ export interface CloneParams {
 
 export interface Type {
   setConfig: (key: string, value: string, type?: "local" | "global" | "system") => Shell.Type;
-  updateAuthRemoteOrigin: (authToken: string) => Shell.Type;
+  updateAuthRemoteOrigin: (owner: string, repo: string, authToken: string) => Shell.Type;
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
@@ -81,7 +81,7 @@ export const create = (workingDir: string): Type => {
     setConfig: (key, value, type = "local") => {
       return git(`config --${type} ${key} ${value}`);
     },
-    updateAuthRemoteOrigin: (authToken: string) => {
+    updateAuthRemoteOrigin: (owner: string, repo: string, authToken: string) => {
       const url = generateHttpBaseAccessUrl({ authToken, owner, repo });
       try {
         git(`remote rm origin`);
