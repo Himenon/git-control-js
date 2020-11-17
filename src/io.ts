@@ -2,21 +2,9 @@ import * as Command from "./command";
 import * as logger from "./logger";
 import * as rimraf from "rimraf";
 
-/**
- * Storageして利用するリポジトリの情報
- */
-export interface Config {
-  baseUrl: "https://github.com" | string;
-  baseSsh: "git@github.com" | string;
-  owner: string;
-  repo: string;
-  branch: string;
-}
-
-export interface Params {
+export interface Params extends Omit<Command.CloneParams, "authToken"> {
   cmd: Command.Type;
-  protocol: "ssh" | "https";
-  config: Config;
+  authToken?: string;
   workingDir: string;
 }
 
@@ -37,11 +25,11 @@ export interface IO {
    * Add the local changes to the stage.
    * (git add -A)
    */
-  save: () => Command.Shell.Type;
+  addAll: () => Command.Shell.Type;
   /**
    * Git commit.
    */
-  commit: (message: string) => Command.Shell.Type;
+  createCommit: (message: string) => Command.Shell.Type;
   /**
    * Git push.
    */
@@ -52,16 +40,11 @@ export interface IO {
   clear: () => void;
 }
 
-export const create = ({ cmd: git, config, protocol, workingDir }: Params): IO => {
+export const create = ({ cmd: git, workingDir, ...cloneParams }: Params): IO => {
   return {
     setup: async () => {
       await git.clone({
-        owner: config.owner,
-        repo: config.repo,
-        branch: config.branch,
-        baseUrl: config.baseUrl,
-        baseSsh: config.baseSsh,
-        protocol: protocol,
+        ...cloneParams,
         outputDir: workingDir,
       });
     },
@@ -70,9 +53,9 @@ export const create = ({ cmd: git, config, protocol, workingDir }: Params): IO =
       const { stdout } = await git.getStatus();
       return !!stdout.match(/nothing to commit, working tree clean/);
     },
-    save: () => git.addAll(),
-    commit: (message = "chore: update data") => git.commit(message),
-    push: (branch = "origin") => git.push(branch, config.branch),
+    addAll: () => git.addAll(),
+    createCommit: (message = "chore: update data") => git.commit(message),
+    push: (remote = "origin", branch = cloneParams.branch) => git.push(remote, branch),
     clear: () => {
       rimraf.sync(workingDir);
       logger.log(`Delete: ${workingDir}`);
