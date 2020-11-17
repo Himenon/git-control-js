@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.5.0"></a>
+# 0.5.0 (2020-11-17)
+
+
+### Features
+
+* add auth origin ([#12](https://github.com/Himenon/git-control-js/issues/12)) ([c1f07b5](https://github.com/Himenon/git-control-js/commit/c1f07b5))
+
+
+
+
+
 <a name="0.4.1"></a>
 ## 0.4.1 (2020-11-17)
 
