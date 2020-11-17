@@ -1,6 +1,7 @@
 import { EOL } from "os";
 import * as Shell from "./shell";
 import * as path from "path";
+import { generateHttpBaseAccessUrl } from "./utils";
 import { existDirectory } from "./filesystem";
 
 export { Shell };
@@ -18,6 +19,7 @@ export interface CloneParams {
 
 export interface Type {
   setConfig: (key: string, value: string, type?: "local" | "global" | "system") => Shell.Type;
+  updateAuthRemoteOrigin: (authToken: string) => Shell.Type;
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
@@ -79,6 +81,15 @@ export const create = (workingDir: string): Type => {
     setConfig: (key, value, type = "local") => {
       return git(`config --${type} ${key} ${value}`);
     },
+    updateAuthRemoteOrigin: (authToken: string) => {
+      const url = generateHttpBaseAccessUrl({ authToken, owner, repo });
+      try {
+        git(`remote rm origin`);
+        return git(`remote add origin ${url}`);
+      } catch (error) {
+        return git(`remote set-url origin ${url}`);
+      }
+    },
     getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
     getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
     getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
@@ -90,10 +101,8 @@ export const create = (workingDir: string): Type => {
         return git(`clone -b ${branch} ${baseSsh}:${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
       }
       if (authToken) {
-        return git(
-          `clone -b ${branch} https://x-access-token:${authToken}@github.com/${owner}/${repo}.git ${outputDir}`,
-          path.dirname(outputDir),
-        );
+        const url = generateHttpBaseAccessUrl({ authToken, owner, repo });
+        return git(`clone -b ${branch} ${url} ${outputDir}`, path.dirname(outputDir));
       }
       return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
     },
