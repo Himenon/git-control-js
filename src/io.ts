@@ -48,7 +48,7 @@ export const create = ({ cmd: git, workingDir, ...cloneParams }: Params): IO => 
         outputDir: workingDir,
       });
       if (cloneParams.authToken) {
-        await git.updateAuthRemoteOrigin(cloneParams.authToken);
+        await git.updateAuthRemoteOrigin(cloneParams.owner, cloneParams.repo, cloneParams.authToken);
       }
     },
     setConfig: git.setConfig,
