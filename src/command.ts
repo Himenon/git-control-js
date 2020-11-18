@@ -84,10 +84,10 @@ export const create = (workingDir: string): Type => {
     updateAuthRemoteOrigin: (owner: string, repo: string, authToken: string) => {
       const url = generateHttpBaseAccessUrl({ authToken, owner, repo });
       try {
+        return git(`remote set-url origin ${url}`);
+      } catch (error) {
         git(`remote rm origin`);
         return git(`remote add origin ${url}`);
-      } catch (error) {
-        return git(`remote set-url origin ${url}`);
       }
     },
     getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
