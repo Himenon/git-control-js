@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.1"></a>
+## 0.6.1 (2020-11-20)
+
+
+### Chores
+
+* fetchを追加 ([#16](https://github.com/Himenon/git-control-js/issues/16)) ([47e5f82](https://github.com/Himenon/git-control-js/commit/47e5f82))
+
+
+
+
+
 <a name="0.6.0"></a>
 # 0.6.0 (2020-11-20)
 
