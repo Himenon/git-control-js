@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.0"></a>
+# 0.6.0 (2020-11-20)
+
+
+### Features
+
+* ioの削除とwrapperの作成 ([#15](https://github.com/Himenon/git-control-js/issues/15)) ([5740378](https://github.com/Himenon/git-control-js/commit/5740378))
+
+
+### BREAKING CHANGES
+
+* interfaceを大きく変更
+
+
+
+
+
 <a name="0.5.2"></a>
 ## 0.5.2 (2020-11-18)
 
