@@ -53,6 +53,10 @@ export interface AddOption {
   file?: string;
 }
 
+export interface FetchOption {
+  target: string;
+}
+
 export interface Type<T> {
   /**
    * git config --${type} ${key} ${value}
@@ -109,6 +113,10 @@ export interface Type<T> {
    * `git add -A`
    */
   add: (option: AddOption) => T;
+  /**
+   * git fetch [target]
+   */
+  fetch: (option: FetchOption) => T;
 }
 
 /**
@@ -178,5 +186,6 @@ export const create = (workingDir: string): Type<Shell.Type> => {
       }
       return git("add -A");
     },
+    fetch: ({ target }) => git(`fetch ${target}`),
   };
 };

@@ -22,5 +22,6 @@ export const create = (workingDir: string): Command.Type<Promise<string>> => {
     push: wrapAsync(git.push),
     commit: wrapAsync(git.commit),
     add: wrapAsync(git.add),
+    fetch: wrapAsync(git.fetch),
   };
 };
