@@ -1,2 +1,2 @@
 export * as Command from "./command";
-export * as IO from "./io";
+export * as Wrap from "./wrap";

@@ -6,7 +6,7 @@ import { existDirectory } from "./filesystem";
 
 export { Shell };
 
-export interface CloneParams {
+export interface CloneOption {
   owner: string;
   repo: string;
   branch: string;
@@ -17,23 +17,65 @@ export interface CloneParams {
   authToken?: string;
 }
 
-export interface Type {
-  setConfig: (key: string, value: string, type?: "local" | "global" | "system") => Shell.Type;
-  updateAuthRemoteOrigin: (owner: string, repo: string, authToken: string) => Shell.Type;
+export interface SetConfigOption {
+  key: string;
+  value: string;
+  type?: "local" | "global" | "system";
+}
+
+export interface CliOption {
+  cwd?: string;
+}
+
+export interface GitRevListOption {
+  remotes?: string;
+  branches?: string;
+}
+
+export interface UpdateRemoteOption {
+  owner: string;
+  repo: string;
+  remote: string;
+  authToken: string;
+}
+
+export interface PushOption {
+  remote: string;
+  branch: string;
+}
+
+export interface CommitOption {
+  shortMessage: string;
+}
+
+export interface AddOption {
+  all?: boolean;
+  file?: string;
+}
+
+export interface Type<T> {
+  /**
+   * git config --${type} ${key} ${value}
+   */
+  setConfig: (option: SetConfigOption) => T;
+  /**
+   *
+   */
+  updateRemote: (option: UpdateRemoteOption) => T;
   /**
    * 現在のローカルブランチ名を取得する
    * @example "master"
    */
-  getBranch: (cwd: string) => Shell.Type;
+  getBranch: (option: CliOption) => T;
   /**
    * 最新のコミットの日付取得する
    * @example "Mon Oct 28 20:18:16 2019 +0900"
    */
-  getLatestCommitDate: (cwd: string) => Shell.Type;
+  getLatestCommitDate: (option: CliOption) => T;
   /**
    * Head CommitのShaを取得する
    */
-  getHeadCommitSha: (cwd: string) => Shell.Type;
+  getHeadCommitSha: (option: CliOption) => T;
   /**
    * `git clone`
    *
@@ -43,33 +85,37 @@ export interface Type {
    * @param branch ブランチ名
    * @param baseUrl GitHub EnterPriseなどのBaseUrl
    */
-  clone: (params: CloneParams) => Shell.Type;
+  clone: (option: CloneOption) => T;
+  /**
+   * git rev-list HEAD
+   */
+  getRevListHead: (params: GitRevListOption) => T;
   /**
    * `git status`
    */
-  getStatus: () => Shell.Type;
+  getStatus: (option?: CliOption) => T;
   /**
    * `git push`
    * @param remote
    * @param branch
    */
-  push: (remote: string, branch: string) => Shell.Type;
+  push: (option: PushOption) => T;
   /**
    * `git commit -m ${message} --no-verify`
    * @param message
    */
-  commit: (message: string) => Shell.Type;
+  commit: (option: CommitOption) => T;
   /**
    * `git add -A`
    */
-  addAll: () => Shell.Type;
+  add: (option: AddOption) => T;
 }
 
 /**
  * gitコマンドを生成する
  * @param pwd コマンド実行ディレクトリ
  */
-export const create = (workingDir: string): Type => {
+export const create = (workingDir: string): Type<Shell.Type> => {
   /**
    * @param args `git`コマンドの引数
    */
@@ -78,21 +124,35 @@ export const create = (workingDir: string): Type => {
     return Shell.exec("git " + args, cwd);
   };
   return {
-    setConfig: (key, value, type = "local") => {
+    setConfig: ({ key, value, type = "local" }) => {
       return git(`config --${type} ${key} ${value}`);
     },
-    updateAuthRemoteOrigin: (owner: string, repo: string, authToken: string) => {
+    updateRemote: ({ owner, repo, remote, authToken }) => {
       const url = generateHttpBaseAccessUrl({ authToken, owner, repo });
       try {
-        return git(`remote set-url origin ${url}`);
+        return git(`remote set-url ${remote} ${url}`);
       } catch (error) {
-        git(`remote rm origin`);
-        return git(`remote add origin ${url}`);
+        git(`remote rm ${remote}`);
+        return git(`remote add ${remote} ${url}`);
       }
     },
-    getBranch: (): Shell.Type => git("symbolic-ref --short HEAD"),
-    getLatestCommitDate: (): Shell.Type => git(`log --pretty=format:"%ad" -1`),
-    getHeadCommitSha: (): Shell.Type => git("rev-parse HEAD"),
+    getRevListHead: (option?: GitRevListOption): Shell.Type => {
+      const options: string[] = [];
+      const command = "rev-list HEAD";
+      if (!option) {
+        return git(command);
+      }
+      if (option.branches) {
+        options.push(`--branches="${option.branches}"`);
+      }
+      if (option.remotes) {
+        options.push(`--remotes="${option.remotes}"`);
+      }
+      return git([command, ...options].join(" "));
+    },
+    getBranch: ({ cwd }): Shell.Type => git("symbolic-ref --short HEAD", cwd),
+    getLatestCommitDate: ({ cwd }): Shell.Type => git(`log --pretty=format:"%ad" -1`, cwd),
+    getHeadCommitSha: ({ cwd }): Shell.Type => git("rev-parse HEAD", cwd),
     clone: ({ owner, repo, branch, baseUrl, baseSsh, protocol, outputDir, authToken }) => {
       if (existDirectory(outputDir)) {
         throw new Error(`Already exist directory: "${outputDir}`);
@@ -107,8 +167,16 @@ export const create = (workingDir: string): Type => {
       return git(`clone -b ${branch} ${baseUrl}/${owner}/${repo} ${outputDir}`, path.dirname(outputDir));
     },
     getStatus: (): Shell.Type => git("status"),
-    push: (remote: string, branch: string): Shell.Type => git(`push ${remote} ${branch}`),
-    commit: (message: string): Shell.Type => git(`commit -m '${message}' --no-verify`),
-    addAll: () => git("add -A"),
+    push: ({ remote, branch }: PushOption): Shell.Type => git(`push ${remote} ${branch}`),
+    commit: ({ shortMessage }: CommitOption): Shell.Type => git(`commit -m '${shortMessage}' --no-verify`),
+    add: ({ all, file }: AddOption) => {
+      if (all) {
+        return git("add -A");
+      }
+      if (file) {
+        return git(`add ${file}`);
+      }
+      return git("add -A");
+    },
   };
 };
