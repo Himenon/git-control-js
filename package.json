@@ -1,6 +1,6 @@
 {
   "name": "@himenon/git-control-js",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "description": "Wrapper for using git commands in Node.js",
   "keywords": [
