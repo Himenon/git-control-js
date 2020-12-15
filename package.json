@@ -2,7 +2,7 @@
   "name": "@himenon/git-control-js",
   "version": "0.6.1",
   "private": true,
-  "description": "GitHub control JS",
+  "description": "Wrapper for using git commands in Node.js",
   "keywords": [
     "nodejs",
     "proxy directory",
