@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.2"></a>
+## 0.6.2 (2020-12-15)
+
+
+### Documentation
+
+* update description ([#18](https://github.com/Himenon/git-control-js/issues/18)) ([bfabc8e](https://github.com/Himenon/git-control-js/commit/bfabc8e))
+
+
+
+
+
 <a name="0.6.1"></a>
 ## 0.6.1 (2020-11-20)
 
