@@ -1,9 +1,39 @@
 # @himenon/git-control-js
 
+Wrapper for using git commands in Node.js.
+
 ## Install
 
 ```
 yarn add @himenon/git-control-js
+```
+
+## Usage
+
+```ts
+import * as GitControl from "@himenon/git-control-js";
+
+const main = async () => {
+  const git = GitControl.Wrap.create(process.cwd());
+  await git.clone({
+    owner: "Himenon",
+    repo: "git-control-js",
+    branch: "main",
+    baseUrl: "https://github.com",
+    baseSsh: "git@github.com",
+    protocol: "https",
+    outputDir: process.cwd(),
+    authToken: "", // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
+  });
+
+  const latestCommitDate = await git.getLatestCommitDate()
+  console.log(latestCommitDate);
+}
+
+main().catch(error => {
+  console.error(error);
+  process.exit(1);
+})
 ```
 
 ## Development
