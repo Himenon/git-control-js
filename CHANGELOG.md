@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.4"></a>
+## 0.6.4 (2020-12-27)
+
+
+### Chores
+
+* **deps:** bump node-notifier from 8.0.0 to 8.0.1 ([#19](https://github.com/Himenon/git-control-js/issues/19)) ([0eedbd2](https://github.com/Himenon/git-control-js/commit/0eedbd2))
+
+
+
+
+
 <a name="0.6.3"></a>
 ## 0.6.3 (2020-12-15)
 
